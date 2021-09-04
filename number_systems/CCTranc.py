@@ -8,7 +8,7 @@ if __name__ == '__main__':
         num = str(input())
         from_base = int(input())
         to_base = int(input())
-        CCOld_CCNew.Main(num,from_base,to_base)
+        CCOld_CCNew.Main(num, from_base, to_base)
     if Vibor == '2':
         a = str(input())
         a_ = int(input())
