@@ -12,8 +12,9 @@ class Calc:
         self._gui_calc(canvas)
         self.label_input = Label(canvas, text='0', width=50)
         self.label_input.grid(row=0, column=0, columnspan=4)
-        self.label_result = Label(canvas, text='=', width=50, anchor='e')
+        self.label_result = Label(canvas, text=' = ', width=50, anchor='e')
         self.label_result.grid(row=2, column=0, columnspan=4)
+        self.label_result.grid_remove()  # как вариант
 
     def _gui_calc(self, canvas):
         buttons = (
@@ -31,6 +32,7 @@ class Calc:
                 button.grid(row=row_idx + 4, column=col_idx, sticky="nsew")
 
     def _click(self, text):
+        self.label_result.grid()  # как вариант
         if text == 'switch':
             pass  # todo
         if text == 'AC':
@@ -67,6 +69,7 @@ class Calc:
                 if text == '-':
                     self._activeStr = text
         elif text == '=':
+            self.label_result.grid_remove()  # как вариант
             self.stack.append(self._activeStr)
             self._activeStr = calculate(self.stack)
             self.stack.clear()
@@ -84,4 +87,4 @@ class Calc:
         if result_str.startswith('#'):
             self.label_result.configure(text=result_str)
         else:
-            self.label_result.configure(text='=' + result_str if result_str else '=')
+            self.label_result.configure(text=' = ' + result_str if result_str else ' = ')
