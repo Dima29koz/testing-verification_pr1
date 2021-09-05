@@ -1,11 +1,21 @@
+import decimal
 from decimal import Decimal
 
 
 def calculate(stack: list):
+    if stack[-1] == '':
+        stack.pop()
+
     operators = ['*', '/', '+', '-']
+    if stack[-1] in operators:
+        return calculate(stack[:-1])
+
     for operator in operators:
         while operator in stack:
-            stack = _calc(stack, operator)
+            try:
+                stack = _calc(stack, operator)
+            except decimal.DivisionByZero:
+                return '#Деление на 0'
     return stack[0]
 
 
@@ -23,7 +33,10 @@ def _calc(stack: list, current_operator: str):
     if operation == '-':
         result = operand1 - operand2
     if operation == '/':
-        result = operand1 / operand2
+        try:
+            result = operand1 / operand2
+        except decimal.DivisionByZero:
+            raise
     if operation == '*':
         result = operand1 * operand2
 
