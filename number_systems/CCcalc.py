@@ -1,19 +1,28 @@
 from decimal import Decimal
 
-def calc(a, _a, b, _b, c):
-    return _calc(a, _a, b, _b, c)
 
-def _calc(a, _a, b, _b, c):
-    if c == '+':
-        result = Decimal(int(a, base=_a) + int(b, base=_b))
-    if c == '-':
-        result = Decimal(int(a, base=_a) - int(b, base=_b))
-    if c == '/':
-        result = Decimal(int(a, base=_a) / int(b, base=_b))
-    if c == '*':
-        result = Decimal(int(a, base=_a) * int(b, base=_b))
-    return result
+def calculate(operand1, base1, operand2, base2, operation):
+    return _calc(operand1, base1, operand2, base2, operation)
 
+
+def _calc(operand1, base1, operand2, base2, operation):
+    try:
+        if operation == '+':
+            result = Decimal(int(operand1, base=base1) + int(operand2, base=base2))
+            return result
+        if operation == '-':
+            result = Decimal(int(operand1, base=base1) - int(operand2, base=base2))
+            return result
+        if operation == '/':
+            result = Decimal(int(operand1, base=base1) / int(operand2, base=base2))
+            return result
+        if operation == '*':
+            result = Decimal(int(operand1, base=base1) * int(operand2, base=base2))
+            return result
+        else:
+            return 'Ошибка!'
+    except ValueError:
+        return 'Ошибка!'
 
 # class Calc(object):
 #     def __init__(self, a, a_, b, b_, c):

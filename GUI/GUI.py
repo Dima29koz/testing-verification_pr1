@@ -2,7 +2,7 @@ from tkinter import *
 import tkinter.ttk as ttk
 
 from GUI.basic_calc import Calc
-from  GUI.CCsysytem import Calcul
+from GUI.CCsysytem import CC
 
 
 class GUI:
@@ -24,7 +24,7 @@ class GUI:
         notebook.add(frame3, text='Определитель числа')
 
         Calc(frame1)
-        Calcul(frame2)
+        CC(frame2)
         # add here your code
 
         window.mainloop()
