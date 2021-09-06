@@ -20,7 +20,7 @@ def _calc(operand1, base1, operand2, base2, operation):
             if operation == '-':
                 return str(operand1_10 - operand2_10)
             if operation == '/':
-                return str(operand1_10 / operand2_10)
+                return str(f"{(operand1_10 / operand2_10):.{1}f}")
             if operation == '*':
                 return str(operand1_10 * operand2_10)
             else:

@@ -20,6 +20,12 @@ class CC:
     @staticmethod
     def _cc_calculate(frame):
         def _click():
+            if str(operand1.get()).find('.') == True:
+                label1['text'] = 'Ошибка дробей!'
+                return 0
+            if str(operand2.get()).find('.') == True:
+                label1['text'] = 'Ошибка дробей!'
+                return 0
             try:
                 operation = op[box1.curselection()[0]]
             except IndexError:
@@ -29,7 +35,7 @@ class CC:
                 if result == 'Ошибка!':
                     label1['text'] = 'Ошибка!'
                 else:
-                    label1['text'] = result + ' в 10'
+                    label1['text'] = '= ' + result + ' в 10'
 
         inputs = Frame(frame)
         inputs.pack(fill='both', expand=True)
@@ -40,11 +46,11 @@ class CC:
         res = Frame(frame)
         res.pack(fill='both', expand=True)
 
-        l_operand1 = Label(inputs1, text='число1')
+        l_operand1 = Label(inputs1, text='Число 1')
         l_operand1.pack(side=TOP, fill='both', expand=True)
         operand1 = Entry(inputs1)
         operand1.pack(side=TOP, fill='both', expand=True)
-        l_operand2 = Label(inputs1, text='число2')
+        l_operand2 = Label(inputs1, text='Число 2')
         l_operand2.pack(side=TOP, fill='both', expand=True)
         operand2 = Entry(inputs1)
         operand2.pack(side=TOP, fill='both', expand=True)
@@ -58,26 +64,29 @@ class CC:
         base2 = Entry(inputs2, width=5)
         base2.pack(side=TOP, fill='both', expand=True)
 
-        box1 = Listbox(inputs, selectmode=SINGLE, height=4, width=2)
+        box1 = Listbox(inputs, selectmode=SINGLE, height=4, width=2, highlightthickness=7, selectbackground="green")
         box1.pack(side=LEFT, fill='both', expand=True)
         op = ['+', '-', '*', '/']
         for elem in op:
             box1.insert(END, elem)
 
-        button1 = Button(res, text='Вычислить', command=_click)
+        button1 = Button(res, text='Вычислить', command=_click, bd=5)
         button1.pack(side=LEFT, fill='both', expand=True)
 
-        label1 = Label(res, text='0')
+        label1 = Label(res, text='= 0')
         label1.pack(side=LEFT, fill='both', expand=True)
 
     @staticmethod
     def _cc_translate(frame):
         def _click():
+            if str(number.get()).find('.') == True:
+                label2['text'] = 'Ошибка дробей!'
+                return 0
             result = translator(number.get(), from_base.get(), to_base.get())
             if result == 'Ошибка!':
                 label2['text'] = 'Ошибка!'
             else:
-                label2['text'] = result + ' в ' + str(to_base.get())
+                label2['text'] = '= ' + result + ' в ' + str(to_base.get())
 
         inputs = Frame(frame)
         inputs.pack(fill='both', expand=True)
@@ -90,11 +99,11 @@ class CC:
         res = Frame(frame)
         res.pack(fill='both', expand=True)
 
-        l_number = Label(inputs1, text='число')
+        l_number = Label(inputs1, text='Число')
         l_number.pack(fill='both', expand=True)
         number = Entry(inputs1)
         number.pack(fill='both', expand=True)
-        l_from_base = Label(inputs2, text='осн')
+        l_from_base = Label(inputs2, text='c. осн')
         l_from_base.pack(fill='both', expand=True)
         from_base = Entry(inputs3, width=5)
         from_base.pack(fill='both', expand=True)
@@ -103,8 +112,8 @@ class CC:
         to_base = Entry(inputs3, width=5)
         to_base.pack(fill='both', expand=True)
 
-        button2 = Button(res, text='Вычислить', command=_click)
+        button2 = Button(res, text='Вычислить', command=_click, bd=5)
         button2.pack(side=LEFT, fill='both', expand=True)
 
-        label2 = Label(res, text=' ')
+        label2 = Label(res, text='= 0')
         label2.pack(side=LEFT, fill='both', expand=True)
