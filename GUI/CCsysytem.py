@@ -1,76 +1,110 @@
 from tkinter import *
 
-from number_systems.CCcalc import calculate
-from number_systems.CCOld_CCNew import translator
-
-operand1 = ''
-base1 = 0
-operand2 = ''
-base2 = 0
-operation = ''
-
-number = ''
-from_base = 0
-to_base = 0
+from number_systems.CCcalc import calculate, translator
 
 
 class CC:
     def __init__(self, canvas):
-        self._gue_CC(canvas)
+        self._gui_number_systems(canvas)
 
-    def _gue_CC(self, canvas):
-        def _click1():
-            global operand1
-            operand1 = txt1.get()
-            global base1
-            base1 = int(txt2.get())
-            global operand2
-            operand2 = txt3.get()
-            global base2
-            base2 = int(txt4.get())
-            global operation
-            operation = txt5.get()
-            if calculate(operand1, base1, operand2, base2, operation) == 'Ошибка!':
-                label1['text'] = 'Ошибка!'
+    def _gui_number_systems(self, canvas):
+        frame1 = Frame(canvas)
+        frame2 = Frame(canvas)
+
+        frame1.grid(pady=10, sticky='nsew')
+        frame2.grid(pady=10, sticky='nsew')
+
+        self._cc_calculate(frame1)
+        self._cc_translate(frame2)
+
+    @staticmethod
+    def _cc_calculate(frame):
+        def _click():
+            try:
+                operation = op[box1.curselection()[0]]
+            except IndexError:
+                label1['text'] = 'Выбирите действие!'
             else:
-                label1['text'] = str(calculate(operand1, base1, operand2, base2, operation)) + ' в 10'
+                result = calculate(operand1.get(), base1.get(), operand2.get(), base2.get(), operation)
+                if result == 'Ошибка!':
+                    label1['text'] = 'Ошибка!'
+                else:
+                    label1['text'] = result + ' в 10'
 
-        def _click2():
-            global number
-            number = txt6.get()
-            global from_base
-            from_base = int(txt7.get())
-            global to_base
-            to_base = int(txt8.get())
-            if translator(number, from_base, to_base) == 'Ошибка!':
+        inputs = Frame(frame)
+        inputs.pack(fill='both', expand=True)
+        inputs1 = Frame(inputs)
+        inputs1.pack(side=LEFT, fill='both', expand=True)
+        inputs2 = Frame(inputs)
+        inputs2.pack(side=LEFT, fill='both', expand=True)
+        res = Frame(frame)
+        res.pack(fill='both', expand=True)
+
+        l_operand1 = Label(inputs1, text='число1')
+        l_operand1.pack(side=TOP, fill='both', expand=True)
+        operand1 = Entry(inputs1)
+        operand1.pack(side=TOP, fill='both', expand=True)
+        l_operand2 = Label(inputs1, text='число2')
+        l_operand2.pack(side=TOP, fill='both', expand=True)
+        operand2 = Entry(inputs1)
+        operand2.pack(side=TOP, fill='both', expand=True)
+
+        l_base1 = Label(inputs2, text='осн')
+        l_base1.pack(side=TOP, fill='both', expand=True)
+        base1 = Entry(inputs2, width=5)
+        base1.pack(side=TOP, fill='both', expand=True)
+        l_base2 = Label(inputs2, text='осн')
+        l_base2.pack(side=TOP, fill='both', expand=True)
+        base2 = Entry(inputs2, width=5)
+        base2.pack(side=TOP, fill='both', expand=True)
+
+        box1 = Listbox(inputs, selectmode=SINGLE, height=4, width=2)
+        box1.pack(side=LEFT, fill='both', expand=True)
+        op = ['+', '-', '*', '/']
+        for elem in op:
+            box1.insert(END, elem)
+
+        button1 = Button(res, text='Вычислить', command=_click)
+        button1.pack(side=LEFT, fill='both', expand=True)
+
+        label1 = Label(res, text='0')
+        label1.pack(side=LEFT, fill='both', expand=True)
+
+    @staticmethod
+    def _cc_translate(frame):
+        def _click():
+            result = translator(number.get(), from_base.get(), to_base.get())
+            if result == 'Ошибка!':
                 label2['text'] = 'Ошибка!'
             else:
-                label2['text'] = str(translator(number, from_base, to_base)) + ' в ' + str(to_base)
+                label2['text'] = result + ' в ' + str(to_base.get())
 
-        txt1 = Entry(canvas)
-        txt1.grid(row=0, column=0)
-        txt1.get()
-        txt2 = Entry(canvas)
-        txt2.grid(row=1, column=0)
-        txt3 = Entry(canvas)
-        txt3.grid(row=0, column=2)
-        txt4 = Entry(canvas)
-        txt4.grid(row=1, column=2)
-        txt5 = Entry(canvas)
-        txt5.grid(row=0, column=1)
-        _label = Label(canvas, text='')
-        _label.grid(row=3, column=0)
-        txt6 = Entry(canvas)
-        txt6.grid(row=4, column=0)
-        txt7 = Entry(canvas)
-        txt7.grid(row=4, column=1)
-        txt8 = Entry(canvas)
-        txt8.grid(row=4, column=2)
-        label1 = Label(canvas, text='0')
-        label1.grid(row=0, column=3)
-        label2 = Label(canvas, text=' ')
-        label2.grid(row=4, column=3)
-        button1 = Button(canvas, text='Вычислить', command=_click1)
-        button1.grid(row=1, column=1, sticky="nsew")
-        button2 = Button(canvas, text='Вычислить', command=_click2)
-        button2.grid(row=5, column=1, sticky="nsew")
+        inputs = Frame(frame)
+        inputs.pack(fill='both', expand=True)
+        inputs1 = Frame(inputs)
+        inputs1.pack(side=LEFT, fill='both', expand=True)
+        inputs2 = Frame(inputs)
+        inputs2.pack(side=LEFT, fill='both', expand=True)
+        inputs3 = Frame(inputs)
+        inputs3.pack(side=LEFT, fill='both', expand=True)
+        res = Frame(frame)
+        res.pack(fill='both', expand=True)
+
+        l_number = Label(inputs1, text='число')
+        l_number.pack(fill='both', expand=True)
+        number = Entry(inputs1)
+        number.pack(fill='both', expand=True)
+        l_from_base = Label(inputs2, text='осн')
+        l_from_base.pack(fill='both', expand=True)
+        from_base = Entry(inputs3, width=5)
+        from_base.pack(fill='both', expand=True)
+        l_to_base = Label(inputs2, text='н. осн')
+        l_to_base.pack(fill='both', expand=True)
+        to_base = Entry(inputs3, width=5)
+        to_base.pack(fill='both', expand=True)
+
+        button2 = Button(res, text='Вычислить', command=_click)
+        button2.pack(side=LEFT, fill='both', expand=True)
+
+        label2 = Label(res, text=' ')
+        label2.pack(side=LEFT, fill='both', expand=True)
