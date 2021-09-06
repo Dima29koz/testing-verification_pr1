@@ -3,7 +3,7 @@ def calculate(stack: list):
         return '0'
     if stack[-1] == '':
         stack.pop()
-    operators = ['*', '/', '+', '-']
+    operators = ['*', '/', '+', '-', '.']
     if stack[-1] in operators:
         return calculate(stack[:-1])
 

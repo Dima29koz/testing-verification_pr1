@@ -26,19 +26,20 @@ class Calc:
 
         for row_idx, row in enumerate(buttons):
             for col_idx, btn in enumerate(row):
-                button = Button(canvas, text=btn, bd=5,
-                                command=partial(self._click, btn))
+                button = Button(canvas, text=btn, bd=5, command=partial(self._click, btn))
                 button.grid(row=row_idx + 4, column=col_idx, sticky="nsew", padx=2, pady=2)
 
     def _click(self, text):
         if text == 'switch':
-            pass  # todo
+            pass
         if text == 'AC':
             self.stack.clear()
             self._activeStr = ''
         elif text == '<-':
             if len(self._activeStr) > 0:
                 self._activeStr = self._activeStr[:-1]
+                if len(self._activeStr) == 0:
+                    self._activeStr = self.stack.pop() if self.stack else ''
             else:
                 if len(self.stack) > 0:
                     self._activeStr = self.stack.pop()
@@ -47,7 +48,10 @@ class Calc:
             if self._activeStr in ['/', '*', '-', '+']:
                 self.stack.append(self._activeStr)
                 self._activeStr = ''
-            self._activeStr += text
+            if self._activeStr == '0':
+                self._activeStr = text
+            else:
+                self._activeStr += text
         elif text == '.':
             if self._activeStr in ['/', '*', '-', '+']:
                 self.stack.append(self._activeStr)
@@ -55,14 +59,13 @@ class Calc:
             if self._activeStr.find('.') == -1:
                 self._activeStr += text
         elif text == '%':
-            self._activeStr = str(calculate([self._activeStr, '/', '100']))
+            if self._activeStr and self._activeStr not in ['/', '*', '-', '+']:
+                self._activeStr = calculate([self._activeStr, '/', '100'])
         elif text in ['/', '*', '-', '+']:
             if self._activeStr:
                 if self._activeStr not in ['/', '*', '-', '+']:
                     self.stack.append(self._activeStr)
-                    self._activeStr = text
-                else:
-                    self._activeStr = text
+                self._activeStr = text
             else:
                 if text == '-':
                     self._activeStr = text
@@ -72,10 +75,12 @@ class Calc:
             self._activeStr = res if not res.startswith('#') else ''
             self.stack.clear()
 
-        input_str = ''.join(self.stack) + self._activeStr
-        self.label_input.configure(text=input_str if input_str else '0')
-
+        self.label_input.configure(text=self.get_input_str())
         self.label_result.configure(text=self.get_dyn_res())
+
+    def get_input_str(self) -> str:
+        input_str = ''.join(self.stack) + self._activeStr
+        return input_str if input_str else '0'
 
     def get_dyn_res(self) -> str:
         if not self.stack and not self._activeStr:
