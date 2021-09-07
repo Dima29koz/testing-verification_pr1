@@ -26,8 +26,9 @@ class Calc:
 
         for row_idx, row in enumerate(buttons):
             for col_idx, btn in enumerate(row):
-                button = Button(canvas, text=btn, bd=5, command=partial(self._click, btn))
-                button.grid(row=row_idx + 4, column=col_idx, sticky="nsew", padx=2, pady=2)
+                if btn != 'switch':
+                    button = Button(canvas, text=btn, bd=5, command=partial(self._click, btn))
+                    button.grid(row=row_idx + 4, column=col_idx, sticky="nsew", padx=2, pady=2)
 
     def _click(self, text):
         if text == 'switch':
@@ -59,10 +60,12 @@ class Calc:
             if self._activeStr.find('.') == -1:
                 self._activeStr += text
         elif text == '%':
-            if self._activeStr and self._activeStr not in ['/', '*', '-', '+']:
+            if self._activeStr and self._activeStr not in ['/', '*', '-', '+', '.']:
                 self._activeStr = calculate([self._activeStr, '/', '100'])
         elif text in ['/', '*', '-', '+']:
             if self._activeStr:
+                if self._activeStr.endswith('.'):
+                    self._activeStr += '0'
                 if self._activeStr not in ['/', '*', '-', '+']:
                     self.stack.append(self._activeStr)
                 self._activeStr = text

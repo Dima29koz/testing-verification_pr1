@@ -13,6 +13,7 @@ def calculate(stack: list):
 def _calc(stack: list):
     s = ''.join(stack)
     try:
-        return str(eval(s))
+        res = eval(s)
+        return str(int(res)) if int(res) == res else str(res)
     except ZeroDivisionError:
         return '#Деление на 0!'
