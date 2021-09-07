@@ -19,7 +19,7 @@ class CC:
         self._cc_translate(frame2)
 
     @staticmethod
-    def control_type(event, field: Entry):
+    def _control_type(event, field: Entry):
         """Проверяет что вводимые данные являются числом"""
         data: str = field.get()
         if not data.isdigit() and data != '':
@@ -32,10 +32,10 @@ class CC:
 
     def _cc_calculate(self, frame):
         def _click():
-            if str(operand1.get()).find('.'):
+            if '.' in str(operand1.get()):
                 label1['text'] = 'Ошибка дробей!'
                 return
-            if str(operand2.get()).find('.'):
+            if '.' in str(operand2.get()):
                 label1['text'] = 'Ошибка дробей!'
                 return
             try:
@@ -70,12 +70,12 @@ class CC:
         l_base1 = Label(inputs2, text='осн')
         l_base1.pack(side=TOP, fill='both', expand=True)
         base1 = Entry(inputs2, width=5)
-        base1.bind("<Any-KeyRelease>", partial(self.control_type, field=base1))
+        base1.bind("<Any-KeyRelease>", partial(self._control_type, field=base1))
         base1.pack(side=TOP, fill='both', expand=True)
         l_base2 = Label(inputs2, text='осн')
         l_base2.pack(side=TOP, fill='both', expand=True)
         base2 = Entry(inputs2, width=5)
-        base2.bind("<Any-KeyRelease>", partial(self.control_type, field=base2))
+        base2.bind("<Any-KeyRelease>", partial(self._control_type, field=base2))
         base2.pack(side=TOP, fill='both', expand=True)
 
         box1 = Listbox(inputs, selectmode=SINGLE, height=4, width=2, highlightthickness=7, selectbackground="green")
@@ -92,9 +92,9 @@ class CC:
 
     def _cc_translate(self, frame):
         def _click():
-            if str(number.get()).find('.'):
+            if '.' in str(number.get()):
                 label2['text'] = 'Ошибка дробей!'
-                return 0
+                return
             result = translator(number.get(), from_base.get(), to_base.get())
             if result == 'Ошибка!':
                 label2['text'] = 'Ошибка!'
@@ -119,12 +119,12 @@ class CC:
         l_from_base = Label(inputs2, text='c. осн')
         l_from_base.pack(fill='both', expand=True)
         from_base = Entry(inputs3, width=5)
-        from_base.bind("<Any-KeyRelease>", partial(self.control_type, field=from_base))
+        from_base.bind("<Any-KeyRelease>", partial(self._control_type, field=from_base))
         from_base.pack(fill='both', expand=True)
         l_to_base = Label(inputs2, text='н. осн')
         l_to_base.pack(fill='both', expand=True)
         to_base = Entry(inputs3, width=5)
-        to_base.bind("<Any-KeyRelease>", partial(self.control_type, field=to_base))
+        to_base.bind("<Any-KeyRelease>", partial(self._control_type, field=to_base))
         to_base.pack(fill='both', expand=True)
 
         button2 = Button(res, text='Вычислить', command=_click, bd=5)
