@@ -1,4 +1,5 @@
 from tkinter import *
+from functools import partial
 
 from number_systems.CCcalc import calculate, translator
 
@@ -18,14 +19,25 @@ class CC:
         self._cc_translate(frame2)
 
     @staticmethod
-    def _cc_calculate(frame):
+    def control_type(event, field: Entry):
+        """Проверяет что вводимые данные являются числом"""
+        data: str = field.get()
+        if not data.isdigit() and data != '':
+            result = ''
+            for i in field.get():
+                if i.isdigit():
+                    result += i
+            field.delete(0, END)
+            field.insert(0, result)
+
+    def _cc_calculate(self, frame):
         def _click():
-            if str(operand1.get()).find('.') == True:
+            if str(operand1.get()).find('.'):
                 label1['text'] = 'Ошибка дробей!'
-                return 0
-            if str(operand2.get()).find('.') == True:
+                return
+            if str(operand2.get()).find('.'):
                 label1['text'] = 'Ошибка дробей!'
-                return 0
+                return
             try:
                 operation = op[box1.curselection()[0]]
             except IndexError:
@@ -58,10 +70,12 @@ class CC:
         l_base1 = Label(inputs2, text='осн')
         l_base1.pack(side=TOP, fill='both', expand=True)
         base1 = Entry(inputs2, width=5)
+        base1.bind("<Any-KeyRelease>", partial(self.control_type, field=base1))
         base1.pack(side=TOP, fill='both', expand=True)
         l_base2 = Label(inputs2, text='осн')
         l_base2.pack(side=TOP, fill='both', expand=True)
         base2 = Entry(inputs2, width=5)
+        base2.bind("<Any-KeyRelease>", partial(self.control_type, field=base2))
         base2.pack(side=TOP, fill='both', expand=True)
 
         box1 = Listbox(inputs, selectmode=SINGLE, height=4, width=2, highlightthickness=7, selectbackground="green")
@@ -76,10 +90,9 @@ class CC:
         label1 = Label(res, text='= 0')
         label1.pack(side=LEFT, fill='both', expand=True)
 
-    @staticmethod
-    def _cc_translate(frame):
+    def _cc_translate(self, frame):
         def _click():
-            if str(number.get()).find('.') == True:
+            if str(number.get()).find('.'):
                 label2['text'] = 'Ошибка дробей!'
                 return 0
             result = translator(number.get(), from_base.get(), to_base.get())
@@ -106,10 +119,12 @@ class CC:
         l_from_base = Label(inputs2, text='c. осн')
         l_from_base.pack(fill='both', expand=True)
         from_base = Entry(inputs3, width=5)
+        from_base.bind("<Any-KeyRelease>", partial(self.control_type, field=from_base))
         from_base.pack(fill='both', expand=True)
         l_to_base = Label(inputs2, text='н. осн')
         l_to_base.pack(fill='both', expand=True)
         to_base = Entry(inputs3, width=5)
+        to_base.bind("<Any-KeyRelease>", partial(self.control_type, field=to_base))
         to_base.pack(fill='both', expand=True)
 
         button2 = Button(res, text='Вычислить', command=_click, bd=5)
