@@ -1,3 +1,4 @@
+import string
 from tkinter import *
 from functools import partial
 
@@ -18,8 +19,7 @@ class CC:
         self._cc_calculate(frame1)
         self._cc_translate(frame2)
 
-    @staticmethod
-    def _control_type(event, field: Entry):
+    def _control_type(self, event, field: Entry, btn: Button):
         """Проверяет что вводимые данные являются числом"""
         data: str = field.get()
         if not data.isdigit() and data != '':
@@ -29,25 +29,31 @@ class CC:
                     result += i
             field.delete(0, END)
             field.insert(0, result)
+        self._control_value(event, field, btn)
+
+    @staticmethod
+    def _control_value(event, field: Entry, btn: Button):
+        """Проверяет что вводимые данные принадлежат допустимым значениям [2:len(алфавит+цифры)]"""
+        data: str = field.get()
+        if data and 2 <= int(data) <= len(string.digits+string.ascii_uppercase):
+            field.configure(background='white')
+            # btn.configure(state=NORMAL)
+        else:
+            field.configure(background='red')
+            # btn.configure(state=DISABLED)
 
     def _cc_calculate(self, frame):
         def _click():
-            if '.' in str(operand1.get()):
-                label1['text'] = 'Ошибка дробей!'
-                return
-            if '.' in str(operand2.get()):
+            if '.' in str(operand1.get()) or '.' in str(operand2.get()):
                 label1['text'] = 'Ошибка дробей!'
                 return
             try:
-                operation = op[box1.curselection()[0]]
+                operation = box1.get(box1.curselection()[0])
             except IndexError:
                 label1['text'] = 'Выбирите действие!'
             else:
                 result = calculate(operand1.get(), base1.get(), operand2.get(), base2.get(), operation)
-                if result == 'Ошибка!':
-                    label1['text'] = 'Ошибка!'
-                else:
-                    label1['text'] = '= ' + result + ' в 10'
+                label1['text'] = result[1:] if result.startswith('#') else '= ' + result + ' в 10'
 
         inputs = Frame(frame)
         inputs.pack(fill='both', expand=True)
@@ -67,15 +73,18 @@ class CC:
         operand2 = Entry(inputs1)
         operand2.pack(side=TOP, fill='both', expand=True)
 
+        button1 = Button(res, text='Вычислить', command=_click, bd=5)
+        button1.pack(side=LEFT, fill='both', expand=True)
+
         l_base1 = Label(inputs2, text='осн')
         l_base1.pack(side=TOP, fill='both', expand=True)
         base1 = Entry(inputs2, width=5)
-        base1.bind("<Any-KeyRelease>", partial(self._control_type, field=base1))
+        base1.bind("<Any-KeyRelease>", partial(self._control_type, field=base1, btn=button1))
         base1.pack(side=TOP, fill='both', expand=True)
         l_base2 = Label(inputs2, text='осн')
         l_base2.pack(side=TOP, fill='both', expand=True)
         base2 = Entry(inputs2, width=5)
-        base2.bind("<Any-KeyRelease>", partial(self._control_type, field=base2))
+        base2.bind("<Any-KeyRelease>", partial(self._control_type, field=base2, btn=button1))
         base2.pack(side=TOP, fill='both', expand=True)
 
         box1 = Listbox(inputs, selectmode=SINGLE, height=4, width=2, highlightthickness=7, selectbackground="green")
@@ -83,9 +92,6 @@ class CC:
         op = ['+', '-', '*', '/']
         for elem in op:
             box1.insert(END, elem)
-
-        button1 = Button(res, text='Вычислить', command=_click, bd=5)
-        button1.pack(side=LEFT, fill='both', expand=True)
 
         label1 = Label(res, text='= 0')
         label1.pack(side=LEFT, fill='both', expand=True)
@@ -96,10 +102,7 @@ class CC:
                 label2['text'] = 'Ошибка дробей!'
                 return
             result = translator(number.get(), from_base.get(), to_base.get())
-            if result == 'Ошибка!':
-                label2['text'] = 'Ошибка!'
-            else:
-                label2['text'] = '= ' + result + ' в ' + str(to_base.get())
+            label2['text'] = result[1:] if result.startswith('#') else '= ' + result + ' в ' + str(to_base.get())
 
         inputs = Frame(frame)
         inputs.pack(fill='both', expand=True)
@@ -112,6 +115,9 @@ class CC:
         res = Frame(frame)
         res.pack(fill='both', expand=True)
 
+        button2 = Button(res, text='Вычислить', command=_click, bd=5)
+        button2.pack(side=LEFT, fill='both', expand=True)
+
         l_number = Label(inputs1, text='Число')
         l_number.pack(fill='both', expand=True)
         number = Entry(inputs1)
@@ -119,16 +125,13 @@ class CC:
         l_from_base = Label(inputs2, text='c. осн')
         l_from_base.pack(fill='both', expand=True)
         from_base = Entry(inputs3, width=5)
-        from_base.bind("<Any-KeyRelease>", partial(self._control_type, field=from_base))
+        from_base.bind("<Any-KeyRelease>", partial(self._control_type, field=from_base, btn=button2))
         from_base.pack(fill='both', expand=True)
         l_to_base = Label(inputs2, text='н. осн')
         l_to_base.pack(fill='both', expand=True)
         to_base = Entry(inputs3, width=5)
-        to_base.bind("<Any-KeyRelease>", partial(self._control_type, field=to_base))
+        to_base.bind("<Any-KeyRelease>", partial(self._control_type, field=to_base, btn=button2))
         to_base.pack(fill='both', expand=True)
-
-        button2 = Button(res, text='Вычислить', command=_click, bd=5)
-        button2.pack(side=LEFT, fill='both', expand=True)
 
         label2 = Label(res, text='= 0')
         label2.pack(side=LEFT, fill='both', expand=True)
