@@ -29,6 +29,9 @@ class Calc:
                 if btn != 'switch':
                     button = Button(canvas, text=btn, bd=5, command=partial(self._click, btn))
                     button.grid(row=row_idx + 4, column=col_idx, sticky="nsew", padx=2, pady=2)
+                else:
+                    button = Button(canvas, text=btn, bd=5, command=partial(self._click, btn), state=DISABLED)
+                    button.grid(row=row_idx + 4, column=col_idx, sticky="nsew", padx=2, pady=2)
 
     def _click(self, text):
         if text == 'switch':
