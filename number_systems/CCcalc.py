@@ -3,6 +3,8 @@ import string
 
 def calculate(operand1: str, base1: str, operand2: str, base2: str, operation: str) -> str:
     res = _calc(operand1, base1, operand2, base2, operation)
+    if res.startswith('#'):
+        return res
     return str(int(float(res))) if int(float(res)) == float(res) else str(res)
 
 
@@ -10,6 +12,8 @@ def _calc(operand1: str, base1: str, operand2: str, base2: str, operation: str):
     try:
         base1 = int(base1)
         base2 = int(base2)
+        if base1 == 0 or base2 == 0:
+            raise ValueError
         operand1_10 = int(operand1, base=base1)
         operand2_10 = int(operand2, base=base2)
     except ValueError:
