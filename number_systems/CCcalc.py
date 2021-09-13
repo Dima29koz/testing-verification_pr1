@@ -1,11 +1,12 @@
 import string
 
 
-def calculate(operand1, base1, operand2, base2, operation) -> str:
-    return _calc(operand1, base1, operand2, base2, operation)
+def calculate(operand1: str, base1: str, operand2: str, base2: str, operation: str) -> str:
+    res = _calc(operand1, base1, operand2, base2, operation)
+    return str(int(float(res))) if int(float(res)) == float(res) else str(res)
 
 
-def _calc(operand1, base1, operand2, base2, operation):
+def _calc(operand1: str, base1: str, operand2: str, base2: str, operation: str):
     try:
         base1 = int(base1)
         base2 = int(base2)
