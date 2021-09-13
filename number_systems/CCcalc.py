@@ -46,6 +46,8 @@ def translator(number: str, from_base: str, to_base: str) -> str:
         if to_base > len(alphabet):
             return f'#Осн. не принадлежит [2:{len(alphabet)}]!'
         try:
+            if number == 0:
+                return '0'
             result = ""
             while number > 0:
                 number, mod = divmod(number, to_base)
