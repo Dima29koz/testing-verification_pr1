@@ -10,10 +10,10 @@ def calculate(stack: list):
     return _calc(stack)
 
 
-def _calc(stack: list):
+def _calc(stack: list) -> str:
     s = ''.join(stack)
     try:
         res = eval(s)
-        return str(int(res)) if int(res) == res else str(res)
+        return str(int(res)) if int(res) == res else ('%1.8f' % res).rstrip('.0')
     except ZeroDivisionError:
         return '#Деление на 0!'
